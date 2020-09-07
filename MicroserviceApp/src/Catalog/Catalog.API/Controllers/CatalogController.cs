@@ -26,10 +26,10 @@ namespace Catalog.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(Task<IEnumerable<Product>>), StatusCodes.Status200OK)]
-        public ActionResult<Task<IEnumerable<Product>>> GetProducts()
+        [ProducesResponseType(typeof(IEnumerable<Product>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            return _repository.GetProducts();
+            return Ok(await _repository.GetProducts());
         }
 
         [HttpGet(template: "{id:length(24)}", Name = "GetProduct")]
@@ -45,11 +45,11 @@ namespace Catalog.API.Controllers
 
         }
 
-        [HttpGet]
+        [HttpGet("{category}")]
         [ProducesResponseType(typeof(IEnumerable<Product>), StatusCodes.Status200OK)]
-        public ActionResult<Task<IEnumerable<Product>>> GetProductsByCategory(string category)
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductsByCategory(string category)
         {
-            return _repository.GetProductByCategory(category);
+            return Ok(await _repository.GetProductByCategory(category));
         }
 
         [HttpPost("[action]")]

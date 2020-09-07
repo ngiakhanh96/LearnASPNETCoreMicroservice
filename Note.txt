@@ -1,0 +1,2 @@
+ActionResult<T> : T not Task
+/catalog/?query="12" similar to /catalog similar to /catalog/?query2="12"
