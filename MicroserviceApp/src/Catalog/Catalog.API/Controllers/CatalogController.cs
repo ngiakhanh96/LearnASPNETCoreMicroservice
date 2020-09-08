@@ -27,6 +27,7 @@ namespace Catalog.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Product>), StatusCodes.Status200OK)]
+        [Produces("application/json")]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
             return Ok(await _repository.GetProducts());
@@ -35,6 +36,7 @@ namespace Catalog.API.Controllers
         [HttpGet(template: "{id:length(24)}", Name = "GetProduct")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
+        [Produces("application/json")]
         public async Task<ActionResult<Product>> GetProductById([FromRoute] string id)
         {
             var product = await _repository.GetProduct(id);
@@ -47,6 +49,7 @@ namespace Catalog.API.Controllers
 
         [HttpGet("{category}")]
         [ProducesResponseType(typeof(IEnumerable<Product>), StatusCodes.Status200OK)]
+        [Produces("application/json")]
         public async Task<ActionResult<IEnumerable<Product>>> GetProductsByCategory(string category)
         {
             return Ok(await _repository.GetProductByCategory(category));
@@ -54,6 +57,7 @@ namespace Catalog.API.Controllers
 
         [HttpPost("[action]")]
         [ProducesResponseType(typeof(Product), StatusCodes.Status201Created)]
+        [Produces("application/json")]
         public async Task<ActionResult<Product>> Create([FromBody] Product product)
         {
             await _repository.Create(product);
@@ -62,8 +66,9 @@ namespace Catalog.API.Controllers
 
 
         [HttpPut("[action]")]
-        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Produces("application/json")]
         public async Task<ActionResult<bool>> Update([FromBody] Product product)
         {
             var result = await _repository.Update(product);
@@ -75,9 +80,21 @@ namespace Catalog.API.Controllers
             };
         }
 
+
+        /// <summary>
+        /// Delete Catalog
+        /// </summary>
+        /// <remarks>
+        /// Return bool
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="500">Internal server error</response>
         [HttpDelete("[action]/{id:length(24)}")]
-        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Produces("application/json")]
         public async Task<ActionResult<bool>> Delete(string id)
         {
             var result = await _repository.Delete(id);
