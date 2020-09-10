@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Catalog.API
+namespace Basket.API
 {
-    // ReSharper disable once ClassNeverInstantiated.Global
     public class Program
     {
         public static void Main(string[] args)
@@ -11,7 +10,6 @@ namespace Catalog.API
             CreateHostBuilder(args).Build().Run();
         }
 
-        // ReSharper disable once MemberCanBePrivate.Global
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
