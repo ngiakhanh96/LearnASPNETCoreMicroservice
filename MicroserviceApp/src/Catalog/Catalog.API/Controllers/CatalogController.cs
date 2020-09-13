@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Catalog.API.Entities;
 using Catalog.API.Repositories.Interfaces;
@@ -30,11 +31,11 @@ namespace Catalog.API.Controllers
             return Ok(await _repository.GetProducts());
         }
 
-        [HttpGet(template: "{id:length(24)}", Name = "GetProduct")]
+        [HttpGet(template: "{id}", Name = "GetProduct")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<Product>> GetProductById([FromRoute] string id)
+        public async Task<ActionResult<Product>> GetProductById([StringLength(24), FromRoute] string id)
         {
             var product = await _repository.GetProduct(id);
             if (product != null) 
@@ -88,11 +89,11 @@ namespace Catalog.API.Controllers
         /// <returns></returns>
         /// <response code="200">OK</response>
         /// <response code="500">Internal server error</response>
-        [HttpDelete("[action]/{id:length(24)}")]
+        [HttpDelete("[action]/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Produces("application/json")]
-        public async Task<ActionResult<bool>> Delete(string id)
+        public async Task<ActionResult<bool>> Delete([StringLength(24), FromRoute] string id)
         {
             var result = await _repository.Delete(id);
             if (result)
