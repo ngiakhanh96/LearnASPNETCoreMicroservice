@@ -1,10 +1,13 @@
 using System;
 using System.IO;
 using System.Reflection;
+using AutoMapper;
 using Basket.API.Data;
 using Basket.API.Data.Interfaces;
 using Basket.API.Repositories;
 using Basket.API.Repositories.Interfaces;
+using EventBusRabbitMQ;
+using EventBusRabbitMQ.Producer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using RabbitMQ.Client;
 using StackExchange.Redis;
 
 namespace Basket.API
@@ -28,6 +32,7 @@ namespace Basket.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
             services.AddSingleton(sp =>
             {
                 var configuration = ConfigurationOptions.Parse(Configuration.GetConnectionString("Redis"), true);
@@ -35,7 +40,7 @@ namespace Basket.API
             });
             services.AddTransient<IBasketContext, BasketContext>();
             services.AddTransient<IBasketRepository, BasketRepository>();
-            services.AddControllers();
+            services.AddAutoMapper(GetType());
 
             services.AddSwaggerGen(c =>
             {
@@ -46,6 +51,30 @@ namespace Basket.API
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+            services.AddSingleton<IRabbitMQConnection>(sp =>
+            {
+                var username = Configuration["EventBus:Username"];
+                var password = Configuration["EventBus:Password"];
+                var factory = new ConnectionFactory
+                {
+                    HostName = Configuration["EventBus:Hostname"],
+                };
+
+                if (!string.IsNullOrWhiteSpace(username))
+                {
+                    factory.UserName = username;
+                }
+
+                if (!string.IsNullOrWhiteSpace(password))
+                {
+                    factory.Password = password;
+                }
+
+                return new RabbitMQConnection(factory);
+            });
+
+            services.AddSingleton<EventBusRabbitMQProducer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -19,7 +19,7 @@ namespace EventBusRabbitMQ.Producer
         {
             using (var channel = _connection.CreateModel())
             {
-                channel.QueueDeclare(queueName);
+                channel.QueueDeclare(queueName, false, false, false, null);
 
                 var message = JsonConvert.SerializeObject(publishModel);
                 var body = Encoding.UTF8.GetBytes(message);
@@ -29,7 +29,7 @@ namespace EventBusRabbitMQ.Producer
                 properties.DeliveryMode = 2;
 
                 channel.ConfirmSelect();
-                channel.BasicPublish("", queueName, true, properties);
+                channel.BasicPublish("", queueName, true, properties, body);
                 channel.WaitForConfirmsOrDie();
 
                 channel.BasicAcks += (sender, eventArgs) =>

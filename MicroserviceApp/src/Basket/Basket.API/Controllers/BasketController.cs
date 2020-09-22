@@ -1,9 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using AutoMapper;
 using Basket.API.Entities;
 using Basket.API.Repositories.Interfaces;
+using EventBusRabbitMQ;
+using EventBusRabbitMQ.Common;
+using EventBusRabbitMQ.Events;
+using EventBusRabbitMQ.Producer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
 
 namespace Basket.API.Controllers
@@ -14,13 +21,19 @@ namespace Basket.API.Controllers
     {
         private readonly IBasketRepository _basketRepository;
         private readonly ILogger<BasketController> _logger;
+        private readonly EventBusRabbitMQProducer _eventBusRabbitMqProducer;
+        private readonly IMapper _mapper;
 
         public BasketController(
             IBasketRepository basketRepository,
-            ILogger<BasketController> logger)
+            ILogger<BasketController> logger,
+            EventBusRabbitMQProducer eventBusRabbitMqProducer, 
+            IMapper mapper)
         {
             _basketRepository = basketRepository;
             _logger = logger;
+            _eventBusRabbitMqProducer = eventBusRabbitMqProducer;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -50,6 +63,35 @@ namespace Basket.API.Controllers
         public async Task<ActionResult<bool>> DeleteBasket([StringLength(24), FromRoute] string id)
         {
             return await _basketRepository.DeleteBasket(id);
+        }
+
+        [HttpPost("[action]")]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
+        public async Task<ActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
+        {
+            var basket = await _basketRepository.GetBasket(basketCheckout.UserName);
+            if (basket == null)
+            {
+                return BadRequest();
+            }
+
+            var basketRemoved = await _basketRepository.DeleteBasket(basket.UserName);
+            if (!basketRemoved)
+            {
+                return BadRequest();
+            }
+
+            var eventMessage = _mapper.Map<BasketCheckoutEvent>(basketCheckout);
+            eventMessage.RequestId = Guid.NewGuid();
+            eventMessage.TotalPrice = basket.TotalPrice;
+
+            _eventBusRabbitMqProducer.PublishBasketCheckout(
+                EventBusConstants.BasketCheckoutQueue, 
+                eventMessage);
+
+            return Accepted();
         }
     }
 }
