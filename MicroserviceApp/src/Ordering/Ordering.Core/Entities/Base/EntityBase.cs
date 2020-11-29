@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ordering.Core.Entities.Base
+﻿namespace Ordering.Core.Entities.Base
 {
     public abstract class EntityBase<TId> : IEntityBase<TId>
     {
@@ -56,12 +52,7 @@ namespace Ordering.Core.Entities.Base
 
         public static bool operator ==(EntityBase<TId> left, EntityBase<TId> right)
         {
-            if (Equals(left, null))
-            {
-                return Equals(right, null) ? true : false;
-            }
-
-            return left.Equals(right);
+            return left?.Equals(right) ?? Equals(right, null);
         }
 
         public static bool operator !=(EntityBase<TId> left, EntityBase<TId> right)

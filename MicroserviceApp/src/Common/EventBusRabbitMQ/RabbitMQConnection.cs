@@ -55,6 +55,7 @@ namespace EventBusRabbitMQ
             if (!_disposed)
             {
                 _connection.Dispose();
+                _disposed = true;
             }
         }
     }

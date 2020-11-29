@@ -4,13 +4,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Basket.API.Entities;
 using Basket.API.Repositories.Interfaces;
-using EventBusRabbitMQ;
 using EventBusRabbitMQ.Common;
 using EventBusRabbitMQ.Events;
 using EventBusRabbitMQ.Producer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
 
 namespace Basket.API.Controllers

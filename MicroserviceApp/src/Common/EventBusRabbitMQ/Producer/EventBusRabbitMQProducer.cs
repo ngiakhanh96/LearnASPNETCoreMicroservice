@@ -2,7 +2,6 @@
 using System.Text;
 using EventBusRabbitMQ.Events;
 using Newtonsoft.Json;
-using RabbitMQ.Client;
 
 namespace EventBusRabbitMQ.Producer
 {

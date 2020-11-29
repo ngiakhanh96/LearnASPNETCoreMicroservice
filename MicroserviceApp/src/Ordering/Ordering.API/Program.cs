@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Ordering.Core.Entities;
 using Ordering.Infrastructure.Data;
 
 namespace Ordering.API
@@ -30,21 +25,19 @@ namespace Ordering.API
 
         private static void CreateAndSeedDatabase(IHost host)
         {
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var loggerFactory = services.GetRequiredService<ILoggerFactory>();
 
-                try
-                {
-                    var orderContext = services.GetRequiredService<OrderContext>();
-                    OrderContextSeed.Seed(orderContext, loggerFactory);
-                }
-                catch (Exception e)
-                {
-                    var logger = loggerFactory.CreateLogger<Program>();
-                    logger.LogError(e.Message);
-                }
+            try
+            {
+                var orderContext = services.GetRequiredService<OrderContext>();
+                OrderContextSeed.Seed(orderContext, loggerFactory);
+            }
+            catch (Exception e)
+            {
+                var logger = loggerFactory.CreateLogger<Program>();
+                logger.LogError(e.Message);
             }
         }
     }

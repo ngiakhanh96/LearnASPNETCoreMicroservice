@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Ordering.Core.Entities.Base;
+﻿using Ordering.Core.Entities.Base;
 
 namespace Ordering.Core.Entities
 {
