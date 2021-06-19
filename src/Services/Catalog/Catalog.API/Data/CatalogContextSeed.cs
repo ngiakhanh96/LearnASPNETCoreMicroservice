@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Catalog.API.Entities;
+using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Catalog.API.Entities;
-using MongoDB.Driver;
 
 namespace Catalog.API.Data
 {
@@ -11,6 +9,7 @@ namespace Catalog.API.Data
     {
         public static void SeedData(IMongoCollection<Product> productCollection)
         {
+            //productCollection.DeleteMany(p => true);
             var existProduct = productCollection.Find(p => true).Any();
             if (!existProduct)
             {

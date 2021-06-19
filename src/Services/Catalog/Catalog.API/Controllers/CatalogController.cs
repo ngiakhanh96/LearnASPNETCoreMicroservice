@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Catalog.API.Entities;
+﻿using Catalog.API.Entities;
 using Catalog.API.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Catalog.API.Controllers
 {
@@ -31,7 +28,7 @@ namespace Catalog.API.Controllers
             return Ok(await _productRepository.GetProducts());
         }
 
-        [HttpGet("{id}:length(24)", Name = "GetProduct")]
+        [HttpGet("{id}:length(24)", Name = nameof(GetProductById))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
         public async Task<ActionResult<Product>> GetProductById(string id)
@@ -45,12 +42,11 @@ namespace Catalog.API.Controllers
             return Ok(product);
         }
 
-        [HttpGet("[action]/{category}", Name = "GetProductByCategory")]
+        [HttpGet("[action]/{category}", Name = nameof(GetProductsByCategory))]
         [ProducesResponseType(typeof(IEnumerable<Product>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Product>>> GetProductsByCategory(string category)
         {
-            var products = await _productRepository.GetProductsByCategory(category);
-            return Ok(products);
+            return Ok(await _productRepository.GetProductsByCategory(category));
         }
 
         [HttpPost]
@@ -58,7 +54,7 @@ namespace Catalog.API.Controllers
         public async Task<ActionResult<Product>> CreateProduct([FromBody] Product product)
         {
             await _productRepository.CreateProduct(product);
-            return CreatedAtRoute("GetProduct", new { id = product.Id }, product);
+            return CreatedAtRoute(nameof(GetProductById), new { id = product.Id }, product);
         }
 
         [HttpPut]
@@ -68,7 +64,7 @@ namespace Catalog.API.Controllers
             return Ok(await _productRepository.UpdateProduct(product));
         }
 
-        [HttpDelete("{id:length(24)}", Name = "DeleteProduct")]
+        [HttpDelete("{id:length(24)}", Name = nameof(DeleteProductById))]
         [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteProductById(string id)
         {
