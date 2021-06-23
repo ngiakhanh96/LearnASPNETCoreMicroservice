@@ -5,7 +5,7 @@ namespace Basket.API.Entities
 {
     public class Basket
     {
-        public string UserName { get; }
+        public string UserName { get; init; }
 
         public List<BasketItem> Items { get; set; }
 
