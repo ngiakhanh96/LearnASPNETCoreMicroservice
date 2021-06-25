@@ -1,4 +1,5 @@
 using System.Reflection;
+using AutoMapper;
 using Discount.API.Data;
 using Discount.API.Repositories;
 using FluentValidation;
@@ -28,6 +29,11 @@ namespace Discount.API
             services.AddScoped<IDiscountRepository, DiscountRepository>();
             services.AddControllers()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
+
+            services.AddSingleton(new MapperConfiguration(mc =>
+            {
+                mc.AddMaps(Assembly.GetExecutingAssembly());
+            }).CreateMapper());
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Discount.API", Version = "v1" });
@@ -42,7 +48,11 @@ namespace Discount.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Discount.API v1"));
+                app.UseSwaggerUI(c =>
+                {
+                    c.RoutePrefix = "";
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Discount.API v1");
+                });
             }
 
             app.UseRouting();

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
+using Discount.API.DTO;
 using Discount.API.Entities;
 using Discount.API.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -12,13 +14,15 @@ namespace Discount.API.Controllers
     public class DiscountController : ControllerBase
     {
         private readonly IDiscountRepository _discountRepository;
+        private readonly IMapper _mapper;
 
-        public DiscountController(IDiscountRepository discountRepository)
+        public DiscountController(IDiscountRepository discountRepository, IMapper mapper)
         {
             _discountRepository = discountRepository;
+            _mapper = mapper;
         }
 
-        [HttpGet("{id:guid}", Name = nameof(GetCoupon))]
+        [HttpGet("{id}", Name = nameof(GetCoupon))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<Coupon>> GetCoupon(Guid id)
         {
@@ -27,21 +31,21 @@ namespace Discount.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Coupon>> CreateCoupon([FromBody] Coupon discount)
+        public async Task<ActionResult<Coupon>> CreateCoupon([FromBody] CouponDTO couponDto)
         {
-            var insertedId = await _discountRepository.CreateCoupon(discount);
+            var insertedId = await _discountRepository.CreateCoupon(_mapper.Map<Coupon>(couponDto));
             var newCoupon = await _discountRepository.GetCoupon(insertedId);
             return CreatedAtRoute(nameof(GetCoupon), new {id = newCoupon.Id}, newCoupon);
         }
 
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> UpdateCoupon([FromBody] Coupon discount)
+        public async Task<ActionResult<bool>> UpdateCoupon([FromBody] CouponDTO couponDto)
         {
-            return await _discountRepository.UpdateCoupon(discount);
+            return await _discountRepository.UpdateCoupon(_mapper.Map<Coupon>(couponDto));
         }
 
-        [HttpDelete("{id:guid}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> DeleteCoupon(Guid id)
         {
