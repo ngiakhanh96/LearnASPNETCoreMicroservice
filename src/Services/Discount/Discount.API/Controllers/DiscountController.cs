@@ -24,18 +24,19 @@ namespace Discount.API.Controllers
 
         [HttpGet("{id}", Name = nameof(GetCoupon))]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Coupon>> GetCoupon(Guid id)
+        public async Task<ActionResult<CouponDTO>> GetCoupon(Guid id)
         {
-            return await _discountRepository.GetCoupon(id);
+            var coupon = await _discountRepository.GetCoupon(id);
+            return _mapper.Map<CouponDTO>(coupon);
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Coupon>> CreateCoupon([FromBody] CouponDTO couponDto)
+        public async Task<ActionResult<CouponDTO>> CreateCoupon([FromBody] CouponDTO couponDto)
         {
             var insertedId = await _discountRepository.CreateCoupon(_mapper.Map<Coupon>(couponDto));
             var newCoupon = await _discountRepository.GetCoupon(insertedId);
-            return CreatedAtRoute(nameof(GetCoupon), new {id = newCoupon.Id}, newCoupon);
+            return CreatedAtRoute(nameof(GetCoupon), new {id = newCoupon.Id}, _mapper.Map<CouponDTO>(newCoupon));
         }
 
         [HttpPut]

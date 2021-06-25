@@ -27,13 +27,15 @@ namespace Discount.API
         {
             services.AddScoped<IDiscountContext, DiscountContext>();
             services.AddScoped<IDiscountRepository, DiscountRepository>();
-            services.AddControllers()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
 
             services.AddSingleton(new MapperConfiguration(mc =>
             {
                 mc.AddMaps(Assembly.GetExecutingAssembly());
             }).CreateMapper());
+
+            services.AddControllers()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Discount.API", Version = "v1" });

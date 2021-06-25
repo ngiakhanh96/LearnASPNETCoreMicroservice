@@ -1,4 +1,8 @@
+using System.Reflection;
+using AutoMapper;
 using Basket.API.Repositories;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +31,13 @@ namespace Basket.API
 
             services.AddScoped<IBasketRepository, BasketRepository>();
 
-            services.AddControllers();
+            services.AddSingleton(new MapperConfiguration(mc =>
+            {
+                mc.AddMaps(Assembly.GetExecutingAssembly());
+            }).CreateMapper());
+
+            services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Basket.API", Version = "v1" });
@@ -37,6 +47,7 @@ namespace Basket.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

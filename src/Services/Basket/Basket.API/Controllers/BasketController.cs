@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using Basket.API.DTO;
 using Basket.API.Entities;
 using Basket.API.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -12,25 +14,28 @@ namespace Basket.API.Controllers
     public class BasketController : ControllerBase
     {
         private readonly IBasketRepository _basketRepository;
+        private readonly IMapper _mapper;
 
-        public BasketController(IBasketRepository basketRepository)
+        public BasketController(IBasketRepository basketRepository, IMapper mapper)
         {
             _basketRepository = basketRepository;
+            _mapper = mapper;
         }
 
         [HttpGet(Name = nameof(GetBasket))]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Entities.Basket>> GetBasket(string userName)
+        public async Task<ActionResult<BasketDTO>> GetBasket(string userName)
         {
-            return await _basketRepository.GetBasket(userName) ?? new Entities.Basket(userName, new List<BasketItem>());
+            var basket = await _basketRepository.GetBasket(userName) ?? new Entities.Basket(userName, new List<BasketItem>());
+            return _mapper.Map<BasketDTO>(basket);
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Entities.Basket>> UpsertBasket([FromBody] Entities.Basket shoppingCart)
+        public async Task<ActionResult<BasketDTO>> UpsertBasket([FromBody] BasketDTO basketDto)
         {
-            var basket = await _basketRepository.UpsertBasket(shoppingCart);
-            return CreatedAtAction(nameof(GetBasket), new { userName = basket.UserName}, basket);
+            var basket = await _basketRepository.UpsertBasket(_mapper.Map<Entities.Basket>(basketDto));
+            return CreatedAtAction(nameof(GetBasket), new { userName = basket.UserName}, _mapper.Map<BasketDTO>(basket));
         }
 
         [HttpDelete]

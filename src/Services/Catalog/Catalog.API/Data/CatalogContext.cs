@@ -1,7 +1,5 @@
 ﻿using Catalog.API.Entities;
 using Microsoft.Extensions.Configuration;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Driver;
 
 namespace Catalog.API.Data
@@ -10,7 +8,6 @@ namespace Catalog.API.Data
     {
         public CatalogContext(IConfiguration configuration)
         {
-            BsonSerializer.RegisterIdGenerator(typeof(string), new ObjectIdGenerator());
             var client = new MongoClient(configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
             var database = client.GetDatabase(configuration.GetValue<string>("DatabaseSettings:DatabaseName"));
 

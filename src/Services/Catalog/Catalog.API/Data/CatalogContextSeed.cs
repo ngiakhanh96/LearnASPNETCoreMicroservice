@@ -20,7 +20,7 @@ namespace Catalog.API.Data
         {
             return new List<Product>()
             {
-                new Product()
+                new()
                 {
                     Id = "602d2149e773f2a3990b47f5",
                     Name = "IPhone X",
@@ -30,7 +30,7 @@ namespace Catalog.API.Data
                     Price = 950.00M,
                     Category = "Smart Phone"
                 },
-                new Product()
+                new()
                 {
                     Id = "602d2149e773f2a3990b47f6",
                     Name = "Samsung 10",
@@ -40,7 +40,7 @@ namespace Catalog.API.Data
                     Price = 840.00M,
                     Category = "Smart Phone"
                 },
-                new Product()
+                new()
                 {
                     Id = "602d2149e773f2a3990b47f7",
                     Name = "Huawei Plus",
@@ -50,7 +50,7 @@ namespace Catalog.API.Data
                     Price = 650.00M,
                     Category = "White Appliances"
                 },
-                new Product()
+                new()
                 {
                     Id = "602d2149e773f2a3990b47f8",
                     Name = "Xiaomi Mi 9",
