@@ -26,6 +26,7 @@ services:
 
   pgadmin:
     container_name: pgadmin
+    restart: always
     ports:
       - "5050:80"
     environment:
@@ -67,7 +68,7 @@ services:
     container_name: discount.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "DatabaseSettings__ConnectionString=mongodb://catalogdb:27017"
+      - "DatabaseSettings__ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=sa;Password=password"
     depends_on:
       - discountdb
     ports:

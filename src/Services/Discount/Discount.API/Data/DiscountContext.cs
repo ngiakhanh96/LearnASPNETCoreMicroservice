@@ -12,7 +12,7 @@ namespace Discount.API.Data
         public DiscountContext(IConfiguration configuration)
         {
             _configuration = configuration;
-            Connection = new NpgsqlConnection(_configuration.GetSection("DataSettings:ConnectionString").Value);
+            Connection = new NpgsqlConnection(_configuration.GetSection("DatabaseSettings:ConnectionString").Value);
         }
     }
 }

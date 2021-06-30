@@ -1,12 +1,49 @@
-﻿using Catalog.API.Entities;
+﻿using System.Collections.Generic;
+using System.Threading;
+using Catalog.API.Data;
+using Catalog.API.Entities;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using System.Collections.Generic;
 
-namespace Catalog.API.Data
+namespace Catalog.API.Extensions
 {
-    public class CatalogContextSeed
+    public static class IHostExtensions
     {
-        public static void SeedData(IMongoCollection<Product> productCollection)
+        public static IHost SeedData<TContext>(this IHost host, int retry = 0)
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = scope.ServiceProvider.GetRequiredService<ICatalogContext>();
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<TContext>>();
+                try
+                {
+                    logger.LogInformation("Start migrating ...");
+                    SeedData(context.Products);
+                    logger.LogInformation("Migrated successfully!");
+                }
+                catch (MongoException ex)
+                {
+                    logger.LogError(ex, "An error occurred while migrating database");
+                    if (retry < 3)
+                    {
+                        retry++;
+                        Thread.Sleep(1000);
+                        SeedData<TContext>(host, retry);
+                    }
+                    else
+                    {
+                        logger.LogError(ex, "Failed to migrate database");
+                        throw;
+                    }
+                }
+            }
+            return host;
+        }
+
+        private static void SeedData(IMongoCollection<Product> productCollection)
         {
             //productCollection.DeleteMany(p => true);
             var existProduct = productCollection.Find(p => true).Any();
