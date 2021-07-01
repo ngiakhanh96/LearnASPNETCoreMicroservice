@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Npgsql;
 
-namespace Discount.API.Data
+namespace Discount.Grpc.Data
 {
     public class DiscountContext : IDiscountContext
     {
