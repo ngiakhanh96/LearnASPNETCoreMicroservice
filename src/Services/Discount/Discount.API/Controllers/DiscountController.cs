@@ -27,6 +27,10 @@ namespace Discount.API.Controllers
         public async Task<ActionResult<CouponDTO>> GetCoupon(Guid id)
         {
             var coupon = await _discountRepository.GetCoupon(id);
+            if (coupon == null)
+            {
+                return NotFound();
+            }
             return _mapper.Map<CouponDTO>(coupon);
         }
 
