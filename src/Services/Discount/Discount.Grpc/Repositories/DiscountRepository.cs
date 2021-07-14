@@ -26,6 +26,16 @@ namespace Discount.Grpc.Repositories
                 });
         }
 
+        public Task<Coupon> GetCouponByProductName(string productName)
+        {
+            return _connection.QueryFirstOrDefaultAsync<Coupon>(
+                "SELECT * FROM Coupon WHERE ProductName = @ProductName",
+                new
+                {
+                    ProductName = productName
+                });
+        }
+
         public async Task<Guid> CreateCoupon(Coupon coupon)
         {
             var insertedId = await _connection.ExecuteScalarAsync<Guid>(

@@ -8,6 +8,8 @@ namespace Discount.Grpc.Repositories
     {
         Task<Coupon> GetCoupon(Guid id);
 
+        Task<Coupon> GetCouponByProductName(string productName);
+
         Task<Guid> CreateCoupon(Coupon coupon);
 
         Task<bool> UpdateCoupon(Coupon coupon);

@@ -17,7 +17,7 @@ message CouponDTO {
 }
 
 message GetDiscountRequest {
-	string id = 1;
+	string productName = 1;
 }
 
 message CreateDiscountRequest {
