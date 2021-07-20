@@ -3,7 +3,6 @@ using Catalog.API.Entities;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MongoDB.Bson;
 
 namespace Catalog.API.Repositories
 {

@@ -15,6 +15,10 @@
     <PackageReference Include="Npgsql" Version="6.0.0-preview5" />
   </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Shared\Shared.csproj" />
+    </ItemGroup>
+
   <ItemGroup>
     <Protobuf Include="Protos\discount.proto" GrpcServices="Server" />
   </ItemGroup>
