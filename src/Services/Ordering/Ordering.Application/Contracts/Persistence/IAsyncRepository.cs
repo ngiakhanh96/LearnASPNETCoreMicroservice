@@ -7,7 +7,7 @@ using Ordering.Domain.Common;
 
 namespace Ordering.Application.Contracts.Persistence
 {
-    public interface IAsyncRepository<T> where T : GuidEntityBase
+    public interface IAsyncRepository<T, TId> where T : EntityBase<TId>
     {
         Task<IReadOnlyList<T>> GetAllAsync();
 

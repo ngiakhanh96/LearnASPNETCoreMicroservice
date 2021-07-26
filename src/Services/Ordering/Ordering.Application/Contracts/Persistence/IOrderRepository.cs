@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ordering.Domain.Entities;
 
 namespace Ordering.Application.Contracts.Persistence
 {
-    public interface IOrderRepository : IAsyncRepository<Order>
+    public interface IOrderRepository : IAsyncRepository<Order, Guid>
     {
         Task<IEnumerable<Order>> GetOrderByUserName(string userName);
     }

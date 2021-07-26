@@ -1,8 +1,9 @@
-﻿using Ordering.Domain.Common;
+﻿using System;
+using Ordering.Domain.Common;
 
 namespace Ordering.Domain.Entities
 {
-    public class Order : GuidEntityBase
+    public class Order : EntityBase<Guid>
     {
         public string UserName { get; set; }
 
