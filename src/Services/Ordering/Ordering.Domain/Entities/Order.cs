@@ -2,7 +2,7 @@
 
 namespace Ordering.Domain.Entities
 {
-    public class Order : EntityBase
+    public class Order : GuidEntityBase
     {
         public string UserName { get; set; }
 
