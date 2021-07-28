@@ -1,5 +1,4 @@
 using System.Reflection;
-using AutoMapper;
 using Discount.API.Data;
 using Discount.API.Repositories;
 using FluentValidation;
@@ -28,13 +27,10 @@ namespace Discount.API
             services.AddScoped<IDiscountContext, DiscountContext>();
             services.AddScoped<IDiscountRepository, DiscountRepository>();
 
-            services.AddSingleton(new MapperConfiguration(mc =>
-            {
-                mc.AddMaps(Assembly.GetExecutingAssembly());
-            }).CreateMapper());
-
+            var currentAssembly = Assembly.GetExecutingAssembly();
+            services.AddAutoMapper(currentAssembly);
             services.AddControllers()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(currentAssembly));
 
             services.AddSwaggerGen(c =>
             {

@@ -1,5 +1,4 @@
 using System.Reflection;
-using AutoMapper;
 using Catalog.API.Data;
 using Catalog.API.Repositories;
 using FluentValidation;
@@ -28,14 +27,11 @@ namespace Catalog.API
             services.AddScoped<ICatalogContext, CatalogContext>();
             services.AddScoped<IProductRepository, ProductRepository>();
 
-            services.AddSingleton(new MapperConfiguration(mc =>
-            {
-                mc.AddMaps(Assembly.GetExecutingAssembly());
-            }).CreateMapper());
-
+            var currentAssembly = Assembly.GetExecutingAssembly();
+            services.AddAutoMapper(currentAssembly);
             services.AddControllers()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
-            services.AddControllers();
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(currentAssembly));
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog.API", Version = "v1" });

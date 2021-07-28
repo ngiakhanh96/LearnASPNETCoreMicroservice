@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -21,10 +20,8 @@ namespace Discount.Grpc
             services.AddScoped<IDiscountContext, DiscountContext>();
             services.AddScoped<IDiscountRepository, DiscountRepository>();
 
-            services.AddSingleton(new MapperConfiguration(mc =>
-            {
-                mc.AddMaps(Assembly.GetExecutingAssembly());
-            }).CreateMapper());
+            var currentAssembly = Assembly.GetExecutingAssembly();
+            services.AddAutoMapper(currentAssembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

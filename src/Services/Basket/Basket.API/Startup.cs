@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using AutoMapper;
 using Basket.API.GrpcServices;
 using Basket.API.Repositories;
 using Discount.Grpc.Protos;
@@ -27,21 +26,19 @@ namespace Basket.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(opt => opt.Address = new Uri(Configuration["GrpcSettings:DiscountUrl"]));
+            services.AddScoped<DiscountGrpcService>();
+
             services.AddStackExchangeRedisCache(opt =>
             {
                 opt.Configuration = Configuration.GetSection("CacheSettings:ConnectionString").Value;
             });
 
-            services.AddScoped<IBasketRepository, BasketRepository>();
-            services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(opt => opt.Address = new Uri(Configuration["GrpcSettings:DiscountUrl"]));
-            services.AddScoped<DiscountGrpcService>();
-
-            services.AddSingleton(new MapperConfiguration(mc =>
-            {
-                mc.AddMaps(Assembly.GetExecutingAssembly());
-            }).CreateMapper());
-
-            services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
+            var currentAssembly = Assembly.GetExecutingAssembly();
+            services.AddAutoMapper(currentAssembly);
+            services.AddControllers()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(currentAssembly));
 
             services.AddSwaggerGen(c =>
             {
