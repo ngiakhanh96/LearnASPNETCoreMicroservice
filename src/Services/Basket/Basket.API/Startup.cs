@@ -27,8 +27,9 @@ namespace Basket.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IBasketRepository, BasketRepository>();
-            services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(opt => opt.Address = new Uri(Configuration["GrpcSettings:DiscountUrl"]));
             services.AddScoped<DiscountGrpcService>();
+
+            services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(opt => opt.Address = new Uri(Configuration["GrpcSettings:DiscountUrl"]));
 
             services.AddStackExchangeRedisCache(opt =>
             {
