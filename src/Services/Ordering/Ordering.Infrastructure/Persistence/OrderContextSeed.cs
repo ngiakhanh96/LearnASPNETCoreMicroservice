@@ -7,7 +7,7 @@ namespace Ordering.Infrastructure.Persistence
 {
     public class OrderContextSeed
     {
-        public static void SeedAsync(OrderContext orderContext, ILogger<OrderContextSeed> logger)
+        public static void Seed(OrderContext orderContext, ILogger<OrderContextSeed> logger)
         {
             if (!orderContext.Orders.Any())
             {

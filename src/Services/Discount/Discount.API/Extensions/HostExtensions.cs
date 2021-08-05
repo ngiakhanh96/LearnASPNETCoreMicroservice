@@ -1,14 +1,14 @@
 ﻿using System.Threading;
 using Dapper;
-using Discount.Grpc.Data;
+using Discount.API.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 
-namespace Discount.Grpc.Extensions
+namespace Discount.API.Extensions
 {
-    public static class IHostExtensions
+    public static class HostExtensions
     {
         public static IHost MigrateDatabase<TContext>(this IHost host, int retry = 0)
         {

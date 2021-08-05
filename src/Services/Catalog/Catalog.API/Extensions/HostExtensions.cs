@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace Catalog.API.Extensions
 {
-    public static class IHostExtensions
+    public static class HostExtensions
     {
         public static IHost SeedData<TContext>(this IHost host, int retry = 0)
         {
