@@ -93,3 +93,14 @@ services:
       - "DatabaseSettings__ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=sa;Password=password"
     depends_on:
       - discountdb
+
+
+  ordering.api:
+    container_name: ordering.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings__Ordering=Server=orderingdb;Database=OrderDb;User Id=sa;Password=VictoryNSNWk199x@;"
+    depends_on:
+      - orderingdb
+    ports:
+      - "3003:80"

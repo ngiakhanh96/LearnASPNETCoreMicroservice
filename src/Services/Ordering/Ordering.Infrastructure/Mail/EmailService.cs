@@ -11,23 +11,23 @@ namespace Ordering.Infrastructure.Mail
 {
     public class EmailService : IEmailService
     {
-        public EmailSettings EmailSettings { get; }
+        public EmailSettingsOptions EmailSettingsOptions { get; }
 
         private readonly ILogger<EmailService> _logger;
 
         private readonly SendGridClient _client;
 
-        public EmailService(IOptions<EmailSettings> emailSettings, ILogger<EmailService> logger)
+        public EmailService(IOptions<EmailSettingsOptions> emailSettings, ILogger<EmailService> logger)
         {
-            EmailSettings = emailSettings.Value;
+            EmailSettingsOptions = emailSettings.Value;
             _logger = logger;
-            _client = new SendGridClient(EmailSettings.ApiKey);
+            _client = new SendGridClient(EmailSettingsOptions.ApiKey);
         }
 
         public async Task<bool> SendEmail(Email email)
         {
             var sendGridMessage = MailHelper.CreateSingleEmail(
-                new EmailAddress(EmailSettings.FromAddress, EmailSettings.FromName),
+                new EmailAddress(EmailSettingsOptions.FromAddress, EmailSettingsOptions.FromName),
                 new EmailAddress(email.To),
                 email.Subject,
                 email.Body,

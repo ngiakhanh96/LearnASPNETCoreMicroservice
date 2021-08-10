@@ -38,7 +38,7 @@ namespace Ordering.API.Controllers
             return result;
         }
 
-        [HttpPost(Name = nameof(UpdateOrder))]
+        [HttpPut(Name = nameof(UpdateOrder))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> UpdateOrder([FromBody] UpdateOrderCommand cmd)
         {
