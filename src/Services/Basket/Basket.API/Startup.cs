@@ -5,6 +5,7 @@ using Basket.API.Repositories;
 using Discount.Grpc.Protos;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -33,8 +34,17 @@ namespace Basket.API
 
             services.AddStackExchangeRedisCache(opt =>
             {
-                opt.Configuration = Configuration.GetSection("CacheSettings:ConnectionString").Value;
+                opt.Configuration = Configuration["CacheSettings:ConnectionString"];
             });
+
+            services.AddMassTransit(config =>
+            {
+                config.UsingRabbitMq((ctx, cfg) =>
+                {
+                    cfg.Host(Configuration["EventBusSettings:HostAddress"]);
+                });
+            });
+            services.AddMassTransitHostedService();
 
             var currentAssembly = Assembly.GetExecutingAssembly();
             services.AddAutoMapper(currentAssembly);

@@ -19,7 +19,7 @@ namespace Basket.API.Entities
         {
             get
             {
-                return Items.Sum(shoppingCartItem => shoppingCartItem.Price);
+                return Items.Sum(shoppingCartItem => shoppingCartItem.Price * shoppingCartItem.Quantity);
             }
         }
     }
