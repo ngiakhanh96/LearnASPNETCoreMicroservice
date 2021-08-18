@@ -1,15 +1,17 @@
 ﻿using System;
+using MassTransit.Topology;
 
 namespace EventBus.Messages.Events
 {
-    public class IntegrationBaseEvent
+    [ExcludeFromTopology]
+    public abstract class IntegrationBaseEvent
     {
-        public IntegrationBaseEvent() : this(Guid.NewGuid(), DateTime.UtcNow)
+        protected IntegrationBaseEvent() : this(Guid.NewGuid(), DateTime.UtcNow)
         {
             
         }
 
-        public IntegrationBaseEvent(Guid id, DateTime createdDate)
+        protected IntegrationBaseEvent(Guid id, DateTime createdDate)
         {
             Id = id;
             CreatedDate = createdDate;

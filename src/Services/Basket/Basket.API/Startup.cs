@@ -3,6 +3,7 @@ using System.Reflection;
 using Basket.API.GrpcServices;
 using Basket.API.Repositories;
 using Discount.Grpc.Protos;
+using EventBus.Messages.Events;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
@@ -42,6 +43,10 @@ namespace Basket.API
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
                     cfg.Host(Configuration["EventBusSettings:HostAddress"]);
+                    cfg.Message<BasketCheckoutEvent>(x =>
+                    {
+                        x.SetEntityName(Configuration["EventBusSettings:Publish:ExchangeName"]);
+                    });
                 });
             });
             services.AddMassTransitHostedService();
