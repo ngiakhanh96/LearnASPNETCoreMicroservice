@@ -7,12 +7,7 @@ namespace Ordering.Application.Exceptions
 {
     public class ValidationException : ApplicationException
     {
-        public ValidationException() : base($"One or more validation failures have occurred")
-        {
-            
-        }
-
-        public ValidationException(IEnumerable<ValidationFailure> failures) : this()
+        public ValidationException(IEnumerable<ValidationFailure> failures)
         {
             Errors = failures.GroupBy(
                     e => e.PropertyName,
@@ -21,6 +16,9 @@ namespace Ordering.Application.Exceptions
                     failureGroup => failureGroup.Key,
                     failureGroup => failureGroup.ToArray());
         }
+
+        public override string Message => string.Join(", ", Errors
+            .SelectMany(x => x.Value));
 
         public IDictionary<string, string[]> Errors { get; } = new Dictionary<string, string[]>();
     }

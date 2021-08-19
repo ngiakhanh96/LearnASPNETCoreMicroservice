@@ -1,5 +1,4 @@
 using System.Reflection;
-using EventBus.Messages.Common;
 using EventBus.Messages.Events;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
@@ -40,7 +39,7 @@ namespace Ordering.API
                     {
                         x.SetEntityName(Configuration["EventBusSettings:Consume:ExchangeName"]);
                     });
-                    cfg.ReceiveEndpoint(EventBusConstants.BasketCheckoutQueue, c =>
+                    cfg.ReceiveEndpoint(Configuration["EventBusSettings:Consume:Queue"], c =>
                     {
                         c.ConfigureConsumer<BasketCheckoutConsumer>(ctx);
                     });
