@@ -20,7 +20,7 @@ namespace Ordering.Infrastructure
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(RepositoryBase<>));
             services.AddScoped<IOrderRepository, OrderRepository>();
 
-            services.AddOptions<EmailSettingsOptions>().Bind(configuration.GetSection(EmailSettingsOptions.EmailSettings));
+            services.Configure<EmailSettingsOptions>(configuration.GetSection(EmailSettingsOptions.EmailSettings));
             services.AddSingleton<IEmailService, EmailService>();
             return services;
         }
