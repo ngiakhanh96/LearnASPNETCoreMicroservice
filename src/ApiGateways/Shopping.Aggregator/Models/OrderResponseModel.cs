@@ -1,9 +1,6 @@
-﻿using MediatR;
-using System;
-
-namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
+﻿namespace Shopping.Aggregator.Models
 {
-    public class CheckoutOrderCommand : IRequest<Guid>
+    public class OrderResponseModel
     {
         public string UserName { get; set; }
 
