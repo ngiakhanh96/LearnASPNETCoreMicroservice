@@ -7,7 +7,7 @@
             "DownstreamHostAndPorts": [
                 {
                     "Host": "localhost",
-                    "Port": "3000"
+                    "Port": "5002"
                 }
             ],
             "UpstreamPathTemplate": "/Catalog",
@@ -20,7 +20,7 @@
             "DownstreamHostAndPorts": [
                 {
                     "Host": "localhost",
-                    "Port": "3000"
+                    "Port": "5002"
                 }
             ],
             "UpstreamPathTemplate": "/Catalog/{id}",
@@ -32,7 +32,7 @@
             "DownstreamHostAndPorts": [
                 {
                     "Host": "localhost",
-                    "Port": "3000"
+                    "Port": "5002"
                 }
             ],
             "UpstreamPathTemplate": "/Catalog/GetProductsByCategory/{category}",
@@ -45,7 +45,7 @@
             "DownstreamHostAndPorts": [
                 {
                     "Host": "localhost",
-                    "Port": "3001"
+                    "Port": "5001"
                 }
             ],
             "UpstreamPathTemplate": "/Basket",
@@ -57,7 +57,7 @@
             "DownstreamHostAndPorts": [
                 {
                     "Host": "localhost",
-                    "Port": "3001"
+                    "Port": "5001"
                 }
             ],
             "UpstreamPathTemplate": "/Basket?userName={userName}",
@@ -69,7 +69,7 @@
             "DownstreamHostAndPorts": [
                 {
                     "Host": "localhost",
-                    "Port": "3001"
+                    "Port": "5001"
                 }
             ],
             "UpstreamPathTemplate": "/Basket/Checkout",
@@ -89,7 +89,7 @@
             "DownstreamHostAndPorts": [
                 {
                     "Host": "localhost",
-                    "Port": "3002"
+                    "Port": "5003"
                 }
             ],
             "UpstreamPathTemplate": "/Discount",
@@ -101,7 +101,7 @@
             "DownstreamHostAndPorts": [
                 {
                     "Host": "localhost",
-                    "Port": "3002"
+                    "Port": "5003"
                 }
             ],
             "UpstreamPathTemplate": "/Discount/{id}",
@@ -114,7 +114,7 @@
             "DownstreamHostAndPorts": [
                 {
                     "Host": "localhost",
-                    "Port": "3003"
+                    "Port": "5005"
                 }
             ],
             "UpstreamPathTemplate": "/Order",
@@ -126,7 +126,7 @@
             "DownstreamHostAndPorts": [
                 {
                     "Host": "localhost",
-                    "Port": "3003"
+                    "Port": "5005"
                 }
             ],
             "UpstreamPathTemplate": "/Order/{userName}",

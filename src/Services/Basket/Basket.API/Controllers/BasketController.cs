@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Basket.API.DTO;
 using Basket.API.Entities;
 using Basket.API.GrpcServices;
@@ -10,6 +7,9 @@ using EventBus.Messages.Events;
 using Grpc.Core;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Basket.API.Controllers
 {
@@ -39,22 +39,29 @@ namespace Basket.API.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<BasketDTO>> UpsertBasket([FromBody] BasketDTO basketDto)
         {
-            var basket = await _basketRepository.UpsertBasket(_mapper.Map<Entities.Basket>(basketDto));
-            foreach (var basketItem in basket.Items)
+            var discountUpdateTasks = new List<Task>();
+            foreach (var basketItem in basketDto.Items)
             {
-                try
+                async Task UpdateDiscount()
                 {
-                    var coupon = await _discountGrpcService.GetDiscount(basketItem.ProductName);
-                    basketItem.Price -= coupon.Amount;
+                    try
+                    {
+                        var coupon = await _discountGrpcService.GetDiscount(basketItem.ProductName);
+                        basketItem.Price -= coupon.Amount;
+                    }
+                    catch (RpcException exception) when (exception.StatusCode == Grpc.Core.StatusCode.NotFound)
+                    {
+                    }
                 }
-                catch (RpcException exception) when (exception.StatusCode == Grpc.Core.StatusCode.NotFound)
-                {
-                }
+                discountUpdateTasks.Add(UpdateDiscount());
             }
-            return CreatedAtAction(nameof(GetBasket), new { userName = basket.UserName}, _mapper.Map<BasketDTO>(basket));
+
+            await Task.WhenAll(discountUpdateTasks);
+            var basket = await _basketRepository.UpsertBasket(_mapper.Map<Entities.Basket>(basketDto));
+            return CreatedAtAction(nameof(GetBasket), new { userName = basket.UserName }, _mapper.Map<BasketDTO>(basket));
         }
 
         [HttpDelete]

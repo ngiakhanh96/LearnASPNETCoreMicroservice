@@ -1,10 +1,10 @@
-﻿using System.Threading;
-using Dapper;
+﻿using Dapper;
 using Discount.API.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using System.Threading;
 
 namespace Discount.API.Extensions
 {
@@ -30,7 +30,7 @@ namespace Discount.API.Extensions
                                             Amount INT NOT NULL,
 	                                        PRIMARY KEY (id));");
                     connection.Execute("INSERT INTO Coupon (ProductName, Description, Amount) VALUES ('Samsung 21', 'Samsung', 10)");
-                    connection.Execute("INSERT INTO Coupon (ProductName, Description, Amount) VALUES ('IPhone 12', 'Apple', 10)");
+                    connection.Execute("INSERT INTO Coupon (ProductName, Description, Amount) VALUES ('IPhone X', 'Apple', 10)");
                     logger.LogInformation("Migrated successfully!");
                 }
                 catch (NpgsqlException ex)
